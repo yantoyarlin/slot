@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slot Game Blogger</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #222;
+            color: #fff;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background: #444;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+        .slot-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            background: #111;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .slot-row {
+            display: flex;
+            justify-content: center;
+        }
+        .slot {
+            width: 80px;
+            height: 80px;
+            font-size: 40px;
+            text-align: center;
+            line-height: 80px;
+            border: 3px solid gold;
+            margin: 5px;
+            background-color: #000;
+            border-radius: 10px;
+            color: gold;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin: 10px;
+            cursor: pointer;
+            background: gold;
+            border: none;
+            border-radius: 5px;
+            color: #000;
+            font-weight: bold;
+        }
+        button:hover {
+            background: orange;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🎰 Slot Game Blogger 🎰</h2>
+        <p>Saldo: <span id="saldo">1000</span></p>
+        <p>Taruhan: <span id="bet">200</span></p>
+        <button id="decrease-bet">-</button>
+        <button id="increase-bet">+</button>
+        <div class="slot-container">
+            <div class="slot-row">
+                <div class="slot" id="slot1">❓</div>
+                <div class="slot" id="slot2">❓</div>
+                <div class="slot" id="slot3">❓</div>
+            </div>
+            <div class="slot-row">
+                <div class="slot" id="slot4">❓</div>
+                <div class="slot" id="slot5">❓</div>
+                <div class="slot" id="slot6">❓</div>
+            </div>
+            <div class="slot-row">
+                <div class="slot" id="slot7">❓</div>
+                <div class="slot" id="slot8">❓</div>
+                <div class="slot" id="slot9">❓</div>
+            </div>
+        </div>
+        <button id="spin-btn">Putar</button>
+        <p id="result"></p>
+    </div>
+    <script>
+        const symbols = ['🍒', '🍋', '🍉', '⭐', '🔔'];
+        let saldo = localStorage.getItem('saldo') ? parseInt(localStorage.getItem('saldo')) : 1000;
+        let bet = 200;
+        document.getElementById('saldo').textContent = saldo;
+        document.getElementById('bet').textContent = bet;
+
+        document.getElementById('increase-bet').addEventListener('click', function() {
+            if (bet < 100000) {
+                bet += 200;
+                document.getElementById('bet').textContent = bet;
+            }
+        });
+
+        document.getElementById('decrease-bet').addEventListener('click', function() {
+            if (bet > 200) {
+                bet -= 200;
+                document.getElementById('bet').textContent = bet;
+            }
+        });
+
+        document.getElementById('spin-btn').addEventListener('click', function() {
+            if (saldo < bet) {
+                document.getElementById('result').textContent = 'Saldo tidak cukup!';
+                return;
+            }
+            saldo -= bet;
+            document.getElementById('saldo').textContent = saldo;
+            localStorage.setItem('saldo', saldo);
+
+            let slots = [];
+            for (let i = 1; i <= 9; i++) {
+                slots[i] = symbols[Math.floor(Math.random() * symbols.length)];
+                document.getElementById('slot' + i).textContent = slots[i];
+            }
+            
+            if ((slots[1] === slots[4] && slots[4] === slots[7]) ||
+                (slots[2] === slots[5] && slots[5] === slots[8]) ||
+                (slots[3] === slots[6] && slots[6] === slots[9])) {
+                saldo += bet * 2;
+                document.getElementById('saldo').textContent = saldo;
+                localStorage.setItem('saldo', saldo);
+                document.getElementById('result').textContent = 'Selamat! Anda menang!';
+            } else {
+                document.getElementById('result').textContent = 'Coba lagi!';
+            }
+        });
+    </script>
+</body>
+</html>
